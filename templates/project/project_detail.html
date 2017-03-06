@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+{% block content %}
+    <ul>
+        <ul>
+            <th>Name:</th>
+            <td>{{ project.projectName }}</td>
+        </ul>
+        <ul>
+            <th>Users:</th>
+            {% for user in project.users.all %}
+                <ul>Name: {{ user.username }}.   Role: {{ user.groups.all.0.name }}</ul>
+            {% endfor %}
+        </ul>
+    </ul>
+{% endblock %}
+</body>
+</html>

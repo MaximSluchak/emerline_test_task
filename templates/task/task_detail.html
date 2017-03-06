@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    <table>
+        <tr>
+            <th>Title:</th>
+            <td>{{ task }}</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>{{ task.description }}</td>
+        </tr>
+        <tr>
+            <th>Due date:</th>
+            <td>{{ task.dueDate }}</td>
+        </tr>
+        <tr>
+            <th>Developer:</th>
+            <td>{{ task.user }}</td>
+        </tr>
+        <tr>
+            <th>Project:</th>
+            <td>{{ task.projects }}</td>
+        </tr>
+    </table>
+{% endblock %}
+</body>
+</html>

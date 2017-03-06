@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    <table>
+        <tr>
+            <th>Username :</th>
+            <td>{{ user }}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>Projects:</th>
+            {% for project in user.project_set.all %}
+                <td>{{ project.projectName }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Tasks</th>
+            {% for task in user.task_set.all %}
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.dueDate }}</td>
+                <td>{{ task.projects }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}
+</body>
+</html>

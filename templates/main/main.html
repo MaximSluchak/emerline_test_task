@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+    <a href="/logout/">Log out</a>
+    {% if is_manager %}
+        <h2>Manager {{ request.user.username }}'s workspace</h2>
+        <h3>Users <a href="/user/new/">Create new developer</a></h3>
+        <ul>
+            {% for user in object_list %}
+                <li>
+                    <ul>Name: {{ user.username }}</ul>
+                    <ul>Role:{% for group in user.groups.all %}
+                        {{ group.name }}
+                    {% endfor %} </ul>
+                    <ul><a href="user/{{ user.pk }}">View user</a></ul>
+                    {% ifequal user.groups.all.0.name 'developer' %}
+                        <ul><a href="user/{{ user.pk }}/update">Update user</a></ul>
+                        <ul>
+                            <form method="POST" action="/user/{{ user.pk }}/delete">
+                                {% csrf_token %}<input type="submit" value="Delete user">
+                            </form>
+                        </ul>
+                    {% endifequal %}
+                </li>
+            {% endfor %}
+        </ul>
+        <h3>Projects <a href="/project/new/">Create new</a></h3>
+        <ul>
+            {% for user_project in all_projects %}
+                <li>
+                    <ul>Name: {{ user_project.projectName }}</ul>
+                    <ul>Users: {% for user_in_project in user_project.users.all %}
+                        <ul>Name: {{ user_in_project.username }}. Role: {{ user_in_project.groups.all.0.name }}</ul>
+                    {% endfor %}</ul>
+                    <ul><a href="project/{{ user_project.pk }}">View project</a></ul>
+                    <ul><a href="project/{{ user_project.pk }}/update">Update project</a></ul>
+                    <ul>
+                        <form method="POST" action="/project/{{ user_project.pk }}/delete">
+                            {% csrf_token %}<input type="submit" value="Delete project">
+                        </form>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <h3>Tasks <a href="/task/new/">Create new</a></h3>
+        <ul>
+            {% for user_task in all_tasks %}
+                <li>
+                    <ul>Title: {{ user_task.title }}</ul>
+                    <ul>Description: {{ user_task.description }}</ul>
+                    <ul>Developer: {{ user_task.user }}</ul>
+                    <ul>Due date: {{ user_task.dueDate }}</ul>
+                    {% if user_task.projects %}
+                        <ul>Project: {{ user_task.projects }}</ul>{% endif %}
+                    <ul><a href="task/{{ user_task.pk }}">View task</a></ul>
+                    <ul><a href="task/{{ user_task.pk }}/update">Update task</a></ul>
+                    <ul>
+                        <form method="POST" action="/task/{{ user_task.pk }}/delete">
+                            {% csrf_token %}<input type="submit" value="Delete task">
+                        </form>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if is_developer %}
+        <h2>Developer {{ request.user.username }}'s workspace</h2>
+        {% if has_tasks %}
+            <h3>Tasks</h3>
+            <ul>
+                {% for user_task in request.user.task_set.all %}
+                    <li>
+                        <ul>Title: {{ user_task.title }}</ul>
+                        <ul>Description: {{ user_task.description }}</ul>
+                        {% if user_task.projects %}
+                            <ul>Project: {{ user_task.projects }}</ul>{% endif %}
+                        <ul><a href="task/{{ user_task.pk }}">View task</a></ul>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <h3>Projects</h3>
+        <ul>
+            {% for user_project in request.user.project_set.all %}
+                <li>
+                    <ul>Name: {{ user_project.projectName }}</ul>
+                    <ul>Users: {% for user_in_project in user_project.users.all %}
+                        <ul>Name: {{ user_in_project.username }}. Role: {{ user_in_project.groups.all.0.name }}</ul>
+                    {% endfor %}</ul>
+                    <ul><a href="project/{{ user_project.pk }}">View project</a></ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+</body>
+</html>
